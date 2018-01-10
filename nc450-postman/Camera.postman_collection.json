@@ -24,6 +24,289 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "8a0e52f3-635f-4ea0-b622-c7dc1046e660",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "526d386e-6993-4df7-991d-d5eb093c3ab7",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody)",
+							"postman.setEnvironmentVariable(\"tokenFromLogin\", jsonData.token)"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "Username",
+							"value": "{{user}}",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "Password",
+							"value": "{{passBase64}}",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://192.168.101.243/login.fcgi",
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "StartTurn left",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "48c33fc8-8884-48c4-ba9b-cafb470547a7",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/plain, */*; q=0.01"
+					},
+					{
+						"key": "Origin",
+						"value": "http://192.168.101.243"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded;charset=UTF-8"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "operation",
+							"value": "start",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "token",
+							"value": "{{tokenFromLogin}}",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "direction",
+							"value": "w",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://192.168.101.243/setTurnDirection.fcgi"
+			},
+			"response": []
+		},
+		{
+			"name": "StopTurn left",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "48c33fc8-8884-48c4-ba9b-cafb470547a7",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/plain, */*; q=0.01"
+					},
+					{
+						"key": "Origin",
+						"value": "http://192.168.101.243"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded;charset=UTF-8"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "operation",
+							"value": "stop",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "token",
+							"value": "{{tokenFromLogin}}",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "direction",
+							"value": "w",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://192.168.101.243/setTurnDirection.fcgi"
+			},
+			"response": []
+		},
+		{
+			"name": "StartTurn center",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "48c33fc8-8884-48c4-ba9b-cafb470547a7",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/plain, */*; q=0.01"
+					},
+					{
+						"key": "Origin",
+						"value": "http://192.168.101.243"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded;charset=UTF-8"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "operation",
+							"value": "start",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "token",
+							"value": "{{tokenFromLogin}}",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "direction",
+							"value": "c",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://192.168.101.243/setTurnDirection.fcgi"
+			},
+			"response": []
+		},
+		{
+			"name": "StopTurn center",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "48c33fc8-8884-48c4-ba9b-cafb470547a7",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/plain, */*; q=0.01"
+					},
+					{
+						"key": "Origin",
+						"value": "http://192.168.101.243"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded;charset=UTF-8"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "operation",
+							"value": "stop",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "token",
+							"value": "{{tokenFromLogin}}",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "direction",
+							"value": "c",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://192.168.101.243/setTurnDirection.fcgi"
+			},
+			"response": []
 		}
 	]
 }
