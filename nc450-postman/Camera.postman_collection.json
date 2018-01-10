@@ -1,0 +1,29 @@
+{
+	"info": {
+		"name": "Camera",
+		"_postman_id": "e7ee1dab-13f5-1733-650b-44506de6221d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get snapshot",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": {
+						"password": "{{pass}}",
+						"username": "{{user}}",
+						"algorithm": "MD5"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": "http://{{cameraIp}}:8080/stream/snapshot.jpg",
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
