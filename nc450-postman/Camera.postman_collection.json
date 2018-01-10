@@ -133,7 +133,7 @@
 						}
 					]
 				},
-				"url": "http://192.168.101.243/setTurnDirection.fcgi"
+				"url": "http://{{cameraIp}}/setTurnDirection.fcgi"
 			},
 			"response": []
 		},
@@ -190,7 +190,7 @@
 						}
 					]
 				},
-				"url": "http://192.168.101.243/setTurnDirection.fcgi"
+				"url": "http://{{cameraIp}}/setTurnDirection.fcgi"
 			},
 			"response": []
 		},
@@ -247,7 +247,7 @@
 						}
 					]
 				},
-				"url": "http://192.168.101.243/setTurnDirection.fcgi"
+				"url": "http://{{cameraIp}}/setTurnDirection.fcgi"
 			},
 			"response": []
 		},
@@ -304,7 +304,7 @@
 						}
 					]
 				},
-				"url": "http://192.168.101.243/setTurnDirection.fcgi"
+				"url": "http://{{cameraIp}}/setTurnDirection.fcgi"
 			},
 			"response": []
 		}
