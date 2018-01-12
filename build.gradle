@@ -12,11 +12,18 @@ buildscript {
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
+
+
 dependencies {
+    ext.fuel_version = "1.12.0"
+
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    compile "com.github.kittinunf.fuel:fuel:$fuel_version"
+    compile "com.github.kittinunf.fuel:fuel-gson:$fuel_version"
 }
 
 compileKotlin {
