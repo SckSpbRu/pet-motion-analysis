@@ -26,24 +26,30 @@ class CameraApi(val base: String, val login: String, val pass: String){
         cameraSessionCookie = HttpCookie.parse(list[0])[0]
     }
 
-    fun turnRight() = move("e")
+    fun turnRight() = moveSecond("e")
 
-    fun turnLeft() = move("w")
+    fun turnLeft() = moveSecond("w")
 
-    fun turnUp() = move("n")
+    fun turnUp() = moveSecond("n")
 
-    fun turnDown() = move("s")
-
-    private fun move(direction: String) {
-        executeSetTurnDirectionOp(direction, "start")
-        Thread.sleep(1000L)
-        executeSetTurnDirectionOp(direction, "stop")
-    }
+    fun turnDown() = moveSecond("s")
 
     fun recenter() {
-        executeSetTurnDirectionOp("c", "start")
-        Thread.sleep(4000L)
-        executeSetTurnDirectionOp("c", "stop")
+        move("c", 5000)
+    }
+
+    fun calibratedPosition3() {
+        recenter()
+        move("e", 2200)
+        move("s", 2650)
+    }
+
+    fun moveSecond(direction: String) = move(direction, 1000)
+
+    private fun move(direction: String, execFor: Long) {
+        executeSetTurnDirectionOp(direction, "start")
+        Thread.sleep(execFor)
+        executeSetTurnDirectionOp(direction, "stop")
     }
 
     private fun executeSetTurnDirectionOp(direction: String, operation: String) {
