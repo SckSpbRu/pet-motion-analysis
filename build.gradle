@@ -24,6 +24,9 @@ dependencies {
 
     compile "com.github.kittinunf.fuel:fuel:$fuel_version"
     compile "com.github.kittinunf.fuel:fuel-gson:$fuel_version"
+
+    compile 'com.github.sarxos:webcam-capture:0.3.11'
+    compile 'com.github.sarxos:webcam-capture-driver-ipcam:0.3.11'
 }
 
 compileKotlin {

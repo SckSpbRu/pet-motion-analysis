@@ -38,10 +38,19 @@
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: com.github.kittinunf.fuel:fuel-gson:1.12.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.kittinunf.fuel:fuel:1.12.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.sarxos:webcam-capture-driver-ipcam:0.3.11" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.sarxos:webcam-capture:0.3.11" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: com.github.kittinunf.result:result:1.2.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.3.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.nativelibs4java:bridj:0.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpclient:4.2.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpmime:4.2.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.6" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="pet-motion-analysis_main" />
