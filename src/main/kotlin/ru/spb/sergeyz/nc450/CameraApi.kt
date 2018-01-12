@@ -8,7 +8,7 @@ import java.nio.charset.Charset
 
 class CameraApi(val base: String, val login: String, val pass: String){
 
-    val cameraSession: String
+    val cameraSessionCookie: HttpCookie
 
     val cameraToken: String
 
@@ -20,16 +20,40 @@ class CameraApi(val base: String, val login: String, val pass: String){
                 .responseString(Charset.defaultCharset())
         val theString = responseString.third.component1()!!
         val root = JsonParser().parse(theString)
-        cameraToken = root.asJsonObject.get("token").toString()
+        cameraToken = root.asJsonObject.get("token").toString().trim('"')
 
         val list = responseString.second.headers["Set-Cookie"]!!
-        val firstCookieParsed = HttpCookie.parse(list[0])
-        cameraSession = firstCookieParsed[0].value
+        cameraSessionCookie = HttpCookie.parse(list[0])[0]
     }
 
-    override fun toString(): String {
-        return "CameraApi(base='$base', cameraSession='$cameraSession', cameraToken='$cameraToken')"
+    fun turnRight() = move("e")
+
+    fun turnLeft() = move("w")
+
+    fun turnUp() = move("n")
+
+    fun turnDown() = move("s")
+
+    private fun move(direction: String) {
+        executeSetTurnDirectionOp(direction, "start")
+        Thread.sleep(1000L)
+        executeSetTurnDirectionOp(direction, "stop")
     }
 
+    fun recenter() {
+        executeSetTurnDirectionOp("c", "start")
+        Thread.sleep(4000L)
+        executeSetTurnDirectionOp("c", "stop")
+    }
 
+    private fun executeSetTurnDirectionOp(direction: String, operation: String) {
+        (base + "setTurnDirection.fcgi")
+                .httpPost(listOf(
+                        "operation" to operation,
+                        "token" to cameraToken,
+                        "direction" to direction))
+                .header("Cookie"
+                        to "${cameraSessionCookie.name}=${cameraSessionCookie.value}")
+                .response()
+    }
 }
