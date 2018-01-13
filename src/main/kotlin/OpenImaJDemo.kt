@@ -9,9 +9,8 @@ import org.openimaj.image.MBFImage
 import org.openimaj.video.Video
 import org.openimaj.video.VideoDisplay
 
-
 fun main(args: Array<String>) {
-    val display = VideoDisplay.createVideoDisplay<MBFImage>(MyIpCamVideo)
+    VideoDisplay.createVideoDisplay<MBFImage>(MyIpCamVideo)
 }
 
 object MyIpCamVideo : Video<MBFImage>() {
@@ -19,9 +18,11 @@ object MyIpCamVideo : Video<MBFImage>() {
 
     var myCurrentFrame: MBFImage
 
-    var myCurrentRealTs: Long = System.currentTimeMillis()
+    var myCurrentRealTs: Long = 0L
 
-    val myInitialTs: Long = System.currentTimeMillis()
+    var myInitialTs: Long = 0L
+
+    var requestingFirstTime = true
 
     init {
         Webcam.setDriver(IpCamDriver())
@@ -39,6 +40,10 @@ object MyIpCamVideo : Video<MBFImage>() {
     }
 
     private fun doReadFrameFromWebCamera() {
+        if (requestingFirstTime) {
+            myInitialTs = System.currentTimeMillis()
+            requestingFirstTime = false
+        }
         val image = webcam.image
         myCurrentFrame = ImageUtilities.createMBFImage(image, false)
         myCurrentRealTs = System.currentTimeMillis()
@@ -55,7 +60,7 @@ object MyIpCamVideo : Video<MBFImage>() {
         return -1
     }
 
-    override fun getFPS(): Double = 15.0
+    override fun getFPS(): Double = 10.0
 
     override fun getNextFrame(): MBFImage {
         doReadFrameFromWebCamera()
