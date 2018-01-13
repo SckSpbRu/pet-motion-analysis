@@ -31,11 +31,13 @@ fun main(args: Array<String>) {
 }
 
 fun DoubleMatrix2D.pseudoInverse(): DoubleMatrix2D {
-    val svd = SingularValueDecomposition(this)
+    // extra transpose for handling cols > rows
+    val svd = SingularValueDecomposition(this.transpose())
     val u = svd.u
     val s = svd.s
     val v = svd.v
-    return v.mult(s.diagInvInplace()).mult(u.transpose())
+    // extra transpose for handling cols > rows
+    return v.mult(s.diagInvInplace()).mult(u.transpose()).transpose()
 }
 
 fun DoubleMatrix2D.transpose(): DoubleMatrix2D {
