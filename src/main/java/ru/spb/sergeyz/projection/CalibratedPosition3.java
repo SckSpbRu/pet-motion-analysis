@@ -17,10 +17,10 @@ public class CalibratedPosition3 {
     };
 
     private static double[][] v2dTesting = new double[][]{
-            new double[]{320, 18, 190, 358},
-            new double[]{60, 275, 577, 496},
-            new double[]{0, 0, 0, 0},
-            new double[]{1, 1, 1, 1}
+            new double[]{320, 18, 190, 358, 144},
+            new double[]{60, 275, 577, 496, 180},
+            new double[]{0, 0, 0, 0, 0},
+            new double[]{1, 1, 1, 1, 1}
     };
 
     public static double[][] getV3d() {
