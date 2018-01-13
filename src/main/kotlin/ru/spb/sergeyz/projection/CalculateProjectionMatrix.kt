@@ -33,25 +33,36 @@ fun main(args: Array<String>) {
     val obj = ObjectiveFunction({ mat: DoubleArray ->
         val currentTransMatrix = point4dFromMat(mat)
         - points3d.zip(points2d).sumByDouble { (p3d, p2d) ->
-            p3d.project(currentTransMatrix)
-            p3d.distanceSquared(p2d)
+            val clone = Point3d(p3d.x, p3d.y, p3d.z)
+            clone.project(currentTransMatrix)
+            clone.distanceSquared(p2d)
         }
     })
 
-    val init = InitialGuess(doubleArrayOf(0.0, 1.0, 0.0, 1.0))
+    val init = InitialGuess(doubleArrayOf(1.0, 1.0, 1.0, 1.0))
 
     val optimize = optimizer.optimize(obj, init,
             NelderMeadSimplex(4),
-            MaxIter.unlimited(),
+            MaxIter(1000000),
             MaxEval.unlimited())
 
     val solution = point4dFromMat(optimize.point)
     println(solution)
 
-    val test = Point3d(42.0, 162.0, 0.0)
+    val test = point3d_32
     println(test)
     test.project(solution)
     println(test)
+
+    val sumByDouble = points3d.zip(points2d).sumByDouble { (p3d, p2d) ->
+        val clone = Point3d(p3d.x, p3d.y, p3d.z)
+        clone.project(solution)
+        clone.distanceSquared(p2d)
+
+    }
+    println(sumByDouble)
+
+
 
 }
 
