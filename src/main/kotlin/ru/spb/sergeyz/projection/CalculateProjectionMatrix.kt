@@ -1,75 +1,58 @@
 package ru.spb.sergeyz.projection
 
-import org.apache.commons.math3.optim.ConvergenceChecker
-import org.apache.commons.math3.optim.InitialGuess
-import org.apache.commons.math3.optim.MaxEval
-import org.apache.commons.math3.optim.MaxIter
-import org.apache.commons.math3.optim.nonlinear.scalar.ObjectiveFunction
-import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.NelderMeadSimplex
-import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizer
-import javax.vecmath.Point3d
-import javax.vecmath.Point4d
+import cern.colt.matrix.DoubleMatrix2D
+import cern.colt.matrix.impl.DenseDoubleMatrix2D
+import cern.colt.matrix.linalg.Algebra
+import cern.colt.matrix.linalg.SingularValueDecomposition
+import kotlin.math.abs
 
 fun main(args: Array<String>) {
+    val v3d = DenseDoubleMatrix2D(CalibratedPosition3.getV3d())
+    val v2d = DenseDoubleMatrix2D(CalibratedPosition3.getV2d())
+    val transMat = v2d.mult(v3d.pseudoInverse())
+    val reverseProjectionMat = transMat.pseudoInverse()
+    val v3dReconstructed = reverseProjectionMat.mult(v2d)
 
-    val point3d_31 = Point3d(42.0, 162.0, 0.0)
-    val point3d_32 = Point3d(77.0, 220.0, 0.0)
-    val point3d_33 = Point3d(90.0, 314.0, 0.0)
-    val point3d_34 = Point3d(160.0, 288.0, 0.0)
-    val points3d = listOf(point3d_31, point3d_32, point3d_33, point3d_34)
+    val v2dTesting = DenseDoubleMatrix2D(CalibratedPosition3.getV2dTesting())
+    val v3dReconstructedTesting = reverseProjectionMat.mult(v2dTesting)
 
-    val point2d_31 = Point3d(286.0, 80.0, 0.0)
-    val point2d_32 = Point3d(244.0, 271.0, 0.0)
-    val point2d_33 = Point3d(98.0, 428.0, 0.0)
-    val point2d_34 = Point3d(239.0, 555.0, 0.0)
-    val points2d = listOf(point2d_31, point2d_32, point2d_33, point2d_34)
+    println("V2d")
+    println(v2d)
+    println("V3d")
+    println(v3d)
+    println("V3d reconstructed")
+    println(v3dReconstructed)
 
-
-    val optimizer = SimplexOptimizer(ConvergenceChecker { iteration, previous, current ->
-        point4dFromMat(previous.pointRef)
-                .distanceSquared(point4dFromMat(current.pointRef)) < 0.0001
-    })
-
-    val obj = ObjectiveFunction({ mat: DoubleArray ->
-        val currentTransMatrix = point4dFromMat(mat)
-        - points3d.zip(points2d).sumByDouble { (p3d, p2d) ->
-            val clone = Point3d(p3d.x, p3d.y, p3d.z)
-            clone.project(currentTransMatrix)
-            clone.distanceSquared(p2d)
-        }
-    })
-
-    val init = InitialGuess(doubleArrayOf(1.0, 1.0, 1.0, 1.0))
-
-    val optimize = optimizer.optimize(obj, init,
-            NelderMeadSimplex(4),
-            MaxIter(1000000),
-            MaxEval.unlimited())
-
-    val solution = point4dFromMat(optimize.point)
-    println(solution)
-
-    val test = point3d_32
-    println(test)
-    test.project(solution)
-    println(test)
-
-    val sumByDouble = points3d.zip(points2d).sumByDouble { (p3d, p2d) ->
-        val clone = Point3d(p3d.x, p3d.y, p3d.z)
-        clone.project(solution)
-        clone.distanceSquared(p2d)
-
-    }
-    println(sumByDouble)
-
-
+    println("V2d testing")
+    println(v2dTesting)
+    println("V3d reconstructed testing")
+    println(v3dReconstructedTesting)
 
 }
 
-fun point4dFromMat(mat: DoubleArray): Point4d {
-    val x: Double = mat[0]
-    val y: Double = mat[1]
-    val z: Double = mat[2]
-    val w: Double = mat[3]
-    return Point4d(x, y, z, w)
+fun DoubleMatrix2D.pseudoInverse(): DoubleMatrix2D {
+    val svd = SingularValueDecomposition(this)
+    val u = svd.u
+    val s = svd.s
+    val v = svd.v
+    return v.mult(s.diagInvInplace()).mult(u.transpose())
+}
+
+fun DoubleMatrix2D.transpose(): DoubleMatrix2D {
+    return Algebra().transpose(this)
+}
+
+fun DoubleMatrix2D.diagInvInplace(): DoubleMatrix2D {
+    for (i in 0..rows() - 1) {
+        if (abs(get(i, i)) > 0.00000001) {
+            set(i,i,1.0/get(i,i))
+        }
+    }
+    return this
+}
+
+fun DoubleMatrix2D.mult(other: DoubleMatrix2D): DenseDoubleMatrix2D {
+    val resMat = DenseDoubleMatrix2D(this.rows(), other.columns())
+    this.zMult(other, resMat)
+    return resMat
 }

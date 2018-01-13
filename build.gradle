@@ -32,8 +32,7 @@ dependencies {
     compile 'com.github.sarxos:webcam-capture:0.3.11'
     compile 'com.github.sarxos:webcam-capture-driver-ipcam:0.3.11'
 
-    compile group: 'java3d', name: 'vecmath', version: '1.5.2'
-    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    compile group: 'colt', name: 'colt', version: '1.2.0'
 }
 
 compileKotlin {
