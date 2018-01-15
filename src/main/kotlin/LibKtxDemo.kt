@@ -1,54 +1,77 @@
 import com.badlogic.gdx.Gdx
-import ktx.app.KtxApplicationAdapter
-import com.badlogic.gdx.graphics.g3d.ModelInstance
-import com.badlogic.gdx.graphics.g3d.Material
-import com.badlogic.gdx.graphics.g3d.Model
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
-import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
-import com.badlogic.gdx.graphics.*
-import com.badlogic.gdx.utils.Logger.DEBUG
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.PerspectiveCamera
+import com.badlogic.gdx.graphics.VertexAttributes.Usage.*
+import com.badlogic.gdx.graphics.g3d.*
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController
+import ktx.app.KtxApplicationAdapter
 
 fun main(args: Array<String>) {
-    val config = Lwjgl3ApplicationConfiguration()
-    config.disableAudio(true)
-    config.setWindowSizeLimits(800,600,800,600)
-    Lwjgl3Application(MyApplicationListener(), config)
-    Gdx.app.setLogLevel(DEBUG);
+  val config = Lwjgl3ApplicationConfiguration()
+  config.setWindowSizeLimits(800, 600, 800, 600)
+  Lwjgl3Application(My3DTest(), config)
 }
 
-class MyApplicationListener : KtxApplicationAdapter {
-    lateinit var cam: Camera
-    lateinit var model: Model
-    lateinit var instance: ModelInstance
-    lateinit var modelBatch: ModelBatch
+class My3DTest : KtxApplicationAdapter {
+  lateinit var cam: PerspectiveCamera
 
-    override fun create() {
-        cam = OrthographicCamera(10f, 10f);
+  lateinit var modelBatch: ModelBatch
+  lateinit var environment: Environment
+  lateinit var cameraInputController: CameraInputController
+  val models: MutableList<Model> = mutableListOf()
+  val instances: MutableList<ModelInstance> = mutableListOf()
 
-        model = ModelBuilder().createBox(5f, 5f, 5f,
-                Material(ColorAttribute.createAmbient(Color.CYAN)),
-                VertexAttributes.Usage.Position.toLong())
-        instance = ModelInstance(model)
+  override fun create() {
+    modelBatch = ModelBatch()
 
-        modelBatch = ModelBatch()
-    }
+    cam = PerspectiveCamera(67f,
+        Gdx.graphics.getWidth().toFloat(),
+        Gdx.graphics.getHeight().toFloat())
+    cam.translate(10f, 10f, 10f)
+    cam.lookAt(0f, 0f, 0f)
+    cam.near = 1f;
+    cam.far = 300f
+    cam.update()
 
-    override fun render() {
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.width, Gdx.graphics.height)
-        Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+    val box = ModelBuilder().createBox(5f, 5f, 5f,
+        Material(ColorAttribute.createDiffuse(Color.GREEN)),
+        (Position or Normal).toLong())
+    models.add(box)
+    instances.add(ModelInstance(box))
 
+    val cyl = ModelBuilder().createCylinder(5f, 20f, 5f, 10,
+        Material(ColorAttribute.createDiffuse(Color.GREEN)),
+        (Position or Normal).toLong())
+    models += cyl
+    instances += ModelInstance(cyl)
 
-        modelBatch.begin(cam)
-        modelBatch.render(instance)
-        modelBatch.end()
-    }
+    environment = Environment()
+    environment.set(ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f))
+    environment.add(DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f))
 
-    override fun dispose() {
-        modelBatch.dispose()
-        model.dispose()
-    }
+    cameraInputController = CameraInputController(cam)
+    Gdx.input.inputProcessor = cameraInputController
+  }
+
+  override fun render() {
+    cameraInputController.update()
+
+    Gdx.gl.glViewport(0, 0, Gdx.graphics.width, Gdx.graphics.height)
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
+
+    modelBatch.begin(cam)
+    modelBatch.render(instances, environment)
+    modelBatch.end()
+  }
+
+  override fun dispose() {
+    modelBatch.dispose()
+    models.forEach { it.dispose() }
+  }
 }
